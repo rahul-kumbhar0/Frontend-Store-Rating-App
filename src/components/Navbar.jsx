@@ -6,7 +6,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const isLoggedIn = isAuthenticated();
   const userRole = getUserRole();
-
+  
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -14,7 +14,7 @@ const Navbar = () => {
 
   return (
     <nav style={{
-      backgroundColor: '#2d7affff',
+      backgroundColor: '#2d7aff',
       padding: '1rem',
       marginBottom: '2rem'
     }}>

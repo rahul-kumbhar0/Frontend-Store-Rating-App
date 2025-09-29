@@ -11,6 +11,8 @@ const UserDashboard = () => {
   const [selectedStore, setSelectedStore] = useState(null);
   const [rating, setRating] = useState(0);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchAddress, setSearchAddress] = useState('');
   
   const navigate = useNavigate();
 
@@ -22,15 +24,25 @@ const UserDashboard = () => {
     fetchStores();
   }, [navigate]);
 
-  const fetchStores = async () => {
+  const fetchStores = async (name = '', address = '') => {
     try {
-      const storesData = await apiRequest('/user/stores');
+      // Build query parameters
+      const queryParams = new URLSearchParams();
+      if (name) queryParams.append('name', name);
+      if (address) queryParams.append('address', address);
+      
+      const endpoint = `/user/stores${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      const storesData = await apiRequest(endpoint);
       setStores(storesData);
       setLoading(false);
     } catch (err) {
       setError(err.message || 'Failed to fetch stores');
       setLoading(false);
     }
+  };
+
+  const handleSearch = () => {
+    fetchStores(searchTerm, searchAddress);
   };
 
   const submitRating = async () => {
@@ -41,9 +53,10 @@ const UserDashboard = () => {
 
     try {
       if (selectedStore.userRatingId) {
-        // Update existing rating
+        // Update existing rating - FIXED: Include storeId in the request
         await apiRequest(`/user/ratings/${selectedStore.userRatingId}`, 'PUT', {
-          rating: parseInt(rating)
+          rating: parseInt(rating),
+          storeId: parseInt(selectedStore.id)  // ← THIS WAS MISSING!
         });
       } else {
         // Create new rating
@@ -52,7 +65,7 @@ const UserDashboard = () => {
           storeId: parseInt(selectedStore.id)
         });
       }
-      fetchStores(); // Refresh stores
+      fetchStores(searchTerm, searchAddress); // Refresh stores with current search
       setSelectedStore(null);
       setRating(0);
       alert('Rating submitted successfully!');
@@ -70,7 +83,7 @@ const UserDashboard = () => {
   if (error) return <div style={{ padding: '20px', color: 'red' }}>Error: {error}</div>;
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
+    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
@@ -100,6 +113,72 @@ const UserDashboard = () => {
           userType="user"
         />
       )}
+      
+      <div style={{
+        backgroundColor: '#f8f9fa',
+        padding: '20px',
+        borderRadius: '8px',
+        border: '1px solid #dee2e6',
+        marginBottom: '30px'
+      }}>
+        <h3>Search Stores</h3>
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+          <input
+            type="text"
+            placeholder="Search by store name..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              flex: 1,
+              padding: '10px',
+              border: '1px solid #ccc',
+              borderRadius: '4px'
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Search by address..."
+            value={searchAddress}
+            onChange={(e) => setSearchAddress(e.target.value)}
+            style={{
+              flex: 1,
+              padding: '10px',
+              border: '1px solid #ccc',
+              borderRadius: '4px'
+            }}
+          />
+          <button 
+            onClick={handleSearch}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            Search
+          </button>
+          <button 
+            onClick={() => {
+              setSearchTerm('');
+              setSearchAddress('');
+              fetchStores();
+            }}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            Clear
+          </button>
+        </div>
+      </div>
       
       {selectedStore ? (
         <div style={{ 
@@ -164,7 +243,7 @@ const UserDashboard = () => {
         </div>
       ) : null}
       
-      <h2>Available Stores</h2>
+      <h2>Available Stores ({stores.length})</h2>
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 

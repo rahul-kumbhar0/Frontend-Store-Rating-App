@@ -8,6 +8,7 @@ const StoreOwnerDashboard = () => {
   const [storeData, setStoreData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [error, setError] = useState('');
   
   const navigate = useNavigate();
 
@@ -21,11 +22,18 @@ const StoreOwnerDashboard = () => {
 
   const fetchStoreData = async () => {
     try {
+      console.log('=== Fetching Store Data ===');
       const data = await apiRequest('/store-owner/dashboard');
+      console.log('Store data received:', data);
       setStoreData(data);
       setLoading(false);
     } catch (err) {
-      console.error('Failed to fetch store data');
+      console.error('Failed to fetch store data:', err);
+      setError(err.message || 'Failed to fetch store data');
+      // Show more detailed error
+      if (err.message && err.message.includes('404')) {
+        setError('No store assigned to you yet. Please contact admin.');
+      }
       setLoading(false);
     }
   };
@@ -36,6 +44,26 @@ const StoreOwnerDashboard = () => {
   };
 
   if (loading) return <div style={{ padding: '20px' }}>Loading...</div>;
+  
+  if (error) return (
+    <div style={{ padding: '20px', color: 'red' }}>
+      Error: {error}
+      <button 
+        onClick={() => navigate('/')}
+        style={{
+          marginLeft: '20px',
+          padding: '8px 16px',
+          backgroundColor: '#007bff',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        Go Home
+      </button>
+    </div>
+  );
 
   return (
     <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
@@ -127,6 +155,7 @@ const StoreOwnerDashboard = () => {
                 >
                   <p><strong>Rating:</strong> {rating.rating} stars</p>
                   <p><strong>User:</strong> {rating.User?.name || 'Anonymous'}</p>
+                  <p><strong>Date:</strong> {new Date(rating.createdAt).toLocaleDateString()}</p>
                 </div>
               ))}
             </div>
@@ -143,6 +172,7 @@ const StoreOwnerDashboard = () => {
         }}>
           <h3>No Store Assigned</h3>
           <p>You don't have a store assigned to your account yet.</p>
+          <p>Please contact the system administrator to assign you a store.</p>
         </div>
       )}
     </div>

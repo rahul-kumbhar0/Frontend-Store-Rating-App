@@ -150,12 +150,6 @@ src/
    - Chrome, Firefox, Safari
    - Mobile (iOS/Android)
 
-## Screenshots (Add Images Here)
-- Login Page
-- Admin Dashboard
-- Store Listing for Users
-- Rating Submission Form
-- Store Owner Dashboard
 
 ## Best Practices Followed
 - **Component Reusability**: Shared components for tables, forms.
@@ -176,8 +170,3 @@ ISC (as per package.json)
 - Developer: Rahul Kumbhar
 - GitHub: https://github.com/rahul-kumbhar0/Frontend-Store-Rating-App
 ```
-
-## Summary
-- This README covers all frontend aspects, aligning with requirements.
-- It's professional and ready for team review.
-- Customize with actual screenshots or additional details if needed.

@@ -1,70 +1,183 @@
-# Getting Started with Create React App
+# Store Rating System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+```markdown
+# Store Rating System - Frontend
 
-## Available Scripts
+## Project Overview
+This is the frontend for the Store Rating System, a responsive React-based web application that allows users to rate stores with role-based access. Users can sign up, log in, view stores, submit ratings, and access role-specific dashboards. The UI is built with Tailwind CSS for a modern, mobile-friendly experience.
 
-In the project directory, you can run:
+## Technologies Used
+- **Framework**: React.js (v18+)
+- **Styling**: Tailwind CSS for responsive design
+- **Routing**: React Router for navigation
+- **State Management**: Redux Toolkit (for global state like auth)
+- **HTTP Client**: Axios for API requests
+- **Icons**: Lucide React for UI icons
+- **Build Tool**: Create React App (CRA) with custom configurations
+- **Authentication**: JWT token handling in localStorage
 
-### `npm start`
+## Features Implemented
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### System Administrator Functionalities
+- **Dashboard**: Displays total users, stores, and ratings with real-time data from API.
+- **User Management**: View and filter lists of users (Name, Email, Address, Role).
+- **Store Management**: View and filter stores (Name, Email, Address, Rating).
+- **User Details**: View detailed profiles, including store owner average ratings.
+- **Sorting and Filtering**: Ascending/descending sort on Name, Email, Address, Role.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Normal User Functionalities
+- **Authentication**:
+  - Sign up with Name, Email, Address, Password
+  - Log in with Email and Password
+  - Password update after login
+- **Store Listings**:
+  - View all stores with search by Name and Address
+  - Display: Store Name, Address, Overall Rating, User's Rating, Submit/Update buttons
+- **Rating System**:
+  - Submit ratings (1-5) for stores
+  - Update existing ratings
+  - Dynamic button text ("Rate" vs "Update Rating")
 
-### `npm test`
+### Store Owner Functionalities
+- **Dashboard**: View list of users who rated their store and average rating.
+- **Profile Management**: Update password.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Form Validations
+- **Client-Side Validation**: Matches backend requirements
+  - Name: 20-60 characters
+  - Email: Standard format
+  - Password: 8-16 characters with uppercase and special character
+  - Address: Max 400 characters
+- **Error Handling**: Displays API errors (e.g., validation, server errors) with user-friendly messages.
 
-### `npm run build`
+### Additional Features
+- **Responsive Design**: Works on desktop, tablet, and mobile.
+- **Role-Based UI**: Different dashboards and menus based on user role.
+- **Loading States**: Spinners and disabled buttons during API calls.
+- **Logout**: Clears token and redirects to login.
+- **Sorting**: Tables support sorting on key columns.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Installation and Setup
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
+- Node.js (v16+)
+- npm or yarn
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Steps
 
-### `npm run eject`
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/rahul-kumbhar0/Frontend-Store-Rating-App.git
+   cd Frontend-Store-Rating-App
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. **Environment Variables**
+   Create a [.env](cci:7://file:///c:/Users/91950/OneDrive/Desktop/Store%20Rating%20Sysytem/backend/.env:0:0-0:0) file in the root:
+   ```env
+   REACT_APP_API_BASE=https://backend-stores-2dbn.onrender.com/api
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. **Run Locally**
+   ```bash
+   npm start  # Runs on http://localhost:3000
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+5. **Build for Production**
+   ```bash
+   npm run build  # Outputs to build/ folder
+   ```
 
-## Learn More
+## Project Structure
+```
+src/
+├── components/          # Reusable UI components
+│   ├── StoreRatingForm.jsx    # Rating submission form
+│   ├── UserTable.jsx          # User listing with sorting
+│   ├── StoreTable.jsx         # Store listing with sorting
+│   └── ...                    # Other components (buttons, forms)
+├── pages/               # Page components
+│   ├── Login.jsx              # Login page
+│   ├── Register.jsx           # Registration page
+│   ├── UserDashboard.jsx      # Normal user dashboard
+│   ├── AdminDashboard.jsx     # Admin dashboard
+│   ├── StoreOwnerDashboard.jsx # Store owner dashboard
+│   └── ...                    # Other pages
+├── services/            # API and utility functions
+│   ├── api.js                 # Axios instance and request helpers
+│   └── auth.js                # Auth utilities (token handling)
+├── context/             # Redux store and slices
+│   ├── store.js               # Redux store setup
+│   └── authSlice.js           # Auth state management
+├── App.js               # Main app with routing
+├── index.js             # Entry point
+└── ...
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Deployment
+- **Platform**: Vercel (https://vercel.com)
+- **Live URL**: https://store-rating-app-pied.vercel.app
+- **Build Settings**:
+  - Framework: React
+  - Build Command: `npm run build`
+  - Output Directory: `build`
+  - Environment Variables: `REACT_APP_API_BASE` set in Vercel dashboard
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## API Integration
+- **Base URL**: Configured via `REACT_APP_API_BASE` (points to Render backend).
+- **Authentication**: JWT tokens stored in localStorage; included in Axios headers for protected routes.
+- **Error Handling**: Axios interceptors catch errors (network, 401, 500) and display messages.
+- **Real-Time Updates**: API calls refresh data in dashboards and listings.
+- **CORS**: Handled via backend configuration.
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Testing
+1. **Manual Testing**:
+   - Register as different roles and test all features.
+   - Submit ratings and verify in dashboards.
+   - Check sorting, filtering, and responsiveness.
 
-### Analyzing the Bundle Size
+2. **User Flows**:
+   - Normal User: Signup → Login → View Stores → Submit Rating → Update Profile
+   - Admin: Login → Dashboard → Add Store/User → View Details
+   - Store Owner: Login → Dashboard → View Ratings
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+3. **Browser Testing**:
+   - Chrome, Firefox, Safari
+   - Mobile (iOS/Android)
 
-### Making a Progressive Web App
+## Screenshots (Add Images Here)
+- Login Page
+- Admin Dashboard
+- Store Listing for Users
+- Rating Submission Form
+- Store Owner Dashboard
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Best Practices Followed
+- **Component Reusability**: Shared components for tables, forms.
+- **State Management**: Redux for complex state; local state for simple components.
+- **Performance**: Optimized renders with React hooks.
+- **Accessibility**: Semantic HTML, ARIA labels where needed.
+- **SEO**: Basic meta tags (can be enhanced).
 
-### Advanced Configuration
+## Contributing
+- Fork the repo, create a branch, submit a PR.
+- Follow React best practices (hooks, functional components).
+- Update this README for new features.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## License
+ISC (as per package.json)
 
-### Deployment
+## Contact
+- Developer: Rahul Kumbhar
+- GitHub: https://github.com/rahul-kumbhar0/Frontend-Store-Rating-App
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Summary
+- This README covers all frontend aspects, aligning with requirements.
+- It's professional and ready for team review.
+- Customize with actual screenshots or additional details if needed.

@@ -1,5 +1,6 @@
 // Simple API service with better error handling
-const API_BASE_URL = 'http://localhost:5000/api';
+// Use env var first, fallback to localhost
+const API_BASE_URL = process.env.REACT_APP_API_BASE || 'http://localhost:5000/api';
 
 export const apiRequest = async (endpoint, method = 'GET', data = null) => {
   const url = `${API_BASE_URL}${endpoint}`;

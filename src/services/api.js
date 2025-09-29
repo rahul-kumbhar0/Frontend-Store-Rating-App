@@ -1,7 +1,5 @@
-// Simple API service with better error handling
-// Use env var first, fallback to localhost
-import jwtDecode from 'jwt-decode';
-const API_BASE_URL = process.env.REACT_APP_API_BASE || 'http://localhost:5000/api';
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE;
 
 export const apiRequest = async (endpoint, method = 'GET', data = null) => {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -23,12 +21,12 @@ export const apiRequest = async (endpoint, method = 'GET', data = null) => {
   }
 
   try {
-    console.log('API Request:', { url, method, data }); // Debug log
+    console.log('API Request:', { url, method, data }); 
 
     const response = await fetch(url, config);
     const result = await response.json();
 
-    console.log('API Response:', { status: response.status, data: result }); // Debug log
+    console.log('API Response:', { status: response.status, data: result }); 
 
     if (!response.ok) {
       throw new Error(result.message || `HTTP ${response.status}: ${response.statusText}`);
